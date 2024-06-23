@@ -1,7 +1,7 @@
 export interface Endpoint {
     readonly id: string;
     readonly url: string;
-    readonly type: string;
+    readonly type: 'hls' | 'dash';
     readonly name: string;
 }
 
@@ -11,9 +11,30 @@ export interface Player {
 }
 
 const enspoints = JSON.parse(process.env.ENDPOINT_LIST as string);
-const players = JSON.parse(process.env.PLAYER_LIST as string);
 const hlsPrefix = process.env.HLS_PLAYBACK_PREFIX as string;
 const dashPrefix = process.env.DASH_PLAYBACK_PREFIX as string;
+const players = {
+    hls: [
+        {
+            id: "video-js",
+            name: "Video.js",
+        },
+        {
+            id: "hls-js",
+            name: "HLS.js",
+        },
+    ],
+    dash: [
+        {
+            id: "shaka-player",
+            name: "SHAKA Player",
+        },
+        {
+            id: "dash-js",
+            name: "DASH-IF Player",
+        },
+    ],
+};
   
 export function getEndpoints(): Endpoint[] {
     return enspoints;
@@ -28,7 +49,7 @@ export function getEndpoint(id: string): Endpoint | null {
     return null;
 }
 
-export function getPlayers(type: string): Player[] {
+export function getPlayers(type: 'hls' | 'dash'): Player[] {
     return players[type];
 }
 
